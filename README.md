@@ -4,6 +4,12 @@ The statistical test chosen to test for an association between presence of a can
 
 ## Set up
 
+First make a directory for the results
+
+```
+mkdir results
+```
+
 To build the docker image run the command
 
 ```
