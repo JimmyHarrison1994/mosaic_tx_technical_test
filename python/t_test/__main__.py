@@ -13,14 +13,19 @@ def parse_args():
                         help="Path to write out results for t test for each mutation, gene KO pair")
     parser.add_argument("--plot", dest="plot", action='store_true',
                         help="Produce heatmap of t statistics and P values for T Test results")
+    
+    opt = parser.parse_args()
+
+    return(opt)
 
 def main():
     opt = parse_args()
 
-    t_test_calculator = TTest(mutations_path = mutations_path,
-                            gene_ko_path = gene_ko_path,
-                            out_path = out_path,
-                            plot = plot)
+    t_test_calculator = TTest(mutations_path = opt.mutations_path,
+                            gene_ko_path = opt.gene_ko_path,
+                            out_path = opt.out_path,
+                            plot = opt.plot)
+    t_test_calculator.main()
 
 if __name__ == "__main__":
     main()

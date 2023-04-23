@@ -1,12 +1,15 @@
 from unittest import TestCase
 import pandas as pd
+import os
 
 from t_test.t_test import TTest
 
+data_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../data/"))
+
 def generate_t_test_calculator():
-    return = TTest("../../data/Mutations.tsv",
-                            "../../data/Gene_KO.tsv",
-                            'output.tsv')
+    return TTest(os.path.join(data_dir, "Mutations.tsv"),
+                os.path.join(data_dir,"Gene_KOs.tsv"),
+                'output.tsv')
     
 
 class TestIO(TestCase):
@@ -16,8 +19,8 @@ class TestIO(TestCase):
         self.assertEqual(merged_df.shape, (17, 21))
 
     def test_assign_columns(self):
-        true_mutation_cols = pd.read_csv("../../data/Mutations.tsv", sep='\t').Mutation.tolist()
-        true_gene_ko_cols = list(pd.read_csv("../../data/Gene_KO.tsv", sep='\t'))[1:]
+        true_mutation_cols = pd.read_csv(os.path.join(data_dir, "Mutations.tsv"), sep='\t').Mutation.tolist()
+        true_gene_ko_cols = list(pd.read_csv(os.path.join(data_dir,"Gene_KOs.tsv"), sep='\t'))[1:]
 
         t_test_calculator = generate_t_test_calculator()
         merged_df = t_test_calculator._read_data()

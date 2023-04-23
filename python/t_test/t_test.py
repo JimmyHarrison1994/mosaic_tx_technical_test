@@ -1,28 +1,28 @@
 import pandas as pd
-import matplotlib.pyplot as pyplot
+import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 
 from scipy.stats import ttest_ind
 
 class TTest:
     
     def __init__(
-        self,
-        mutations_path,
-        gene_ko_path,
-        out_path,
-        plot=False
-    )
-    self.mutations_path = mutations_path
-    self.gene_ko_path = gene_ko_path
-    self.out_path = out_path
-    self.plot = plot
+            self,
+            mutations_path,
+            gene_ko_path,
+            out_path,
+            plot=False):
+        self.mutations_path = mutations_path
+        self.gene_ko_path = gene_ko_path
+        self.out_path = out_path
+        self.plot = plot
 
     def _read_data(self):
         mutations_df = pd.read_csv(self.mutations_path, sep='\t')
         mutations_df = mutations_df.set_index('Mutation').transpose().reset_index(names=['Model'])
 
-        gene_ko_df = pd.read_csv(self.gene_ko_path)
+        gene_ko_df = pd.read_csv(self.gene_ko_path, sep='\t')
 
         return gene_ko_df.merge(mutations_df, 'inner', on='Model')
 
@@ -45,14 +45,14 @@ class TTest:
     def plot_t_statistic_heatmap(self, result_df):
         t_statistic_df = result_df.pivot(index='mutation', columns = 'gene_ko', values='t_statistic')
         fig, ax = plt.subplots(1,1)
-        sns.heatmap(t_statistic_df, cmap='vlag', center=0, ax = ax)
+        sns.heatmap(t_statistic_df, cmap='vlag', center=0, ax = ax, cbar_kws={'label': 't_statistic'})
         ax.set_ylabel('Mutation')
         ax.set_xlabel('Gene KO')
         fig.tight_layout()
         fig.savefig('t_statistic_heatmap.png')
 
     def plot_minus_log_p_heatmap(self, result_df):
-        minus_log_p_df = df.pivot(index='mutation', columns = 'gene_ko', values='p_value').applymap(np.log10) * -1
+        minus_log_p_df = result_df.pivot(index='mutation', columns = 'gene_ko', values='p_value').applymap(np.log10) * -1
         fig, ax = plt.subplots(1,1)
         sns.heatmap(minus_log_p_df, cmap='vlag', center=0, ax = ax, cbar_kws={'label': r"$-\mathrm{log}_{10}P$"})
         ax.set_ylabel('Mutation')
@@ -62,7 +62,7 @@ class TTest:
 
 
     def main(self):
-        merged_df = _read_data(mutations_df, gene_ko_df)
+        merged_df = self._read_data()
         mutations_cols, gene_ko_cols = self._assign_columns(merged_df.columns)
 
         row_list = []
