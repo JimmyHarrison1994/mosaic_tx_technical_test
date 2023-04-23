@@ -18,15 +18,19 @@ class TTest:
     self.out_path = out_path
     self.plot = plot
 
-    def _read_mutations_file(self):
+    def _read_data(self):
         mutations_df = pd.read_csv(self.mutations_path, sep='\t')
-        return mutations_df.set_index('Mutation').transpose().reset_index(names=['Model'])
+        mutations_df = mutations_df.set_index('Mutation').transpose().reset_index(names=['Model'])
 
-    def _read_gene_ko_file(self):
-        return pd.read_csv(self.gene_ko_path)
+        gene_ko_df = pd.read_csv(self.gene_ko_path)
 
-    def _merge_mutations_gene_ko_dfs(self, mutations_df, gene_ko_df):
         return gene_ko_df.merge(mutations_df, 'inner', on='Model')
+
+    def _assign_columns(self, columns):
+        mutations_cols = [x for x in columns if 'mut' in x]
+        gene_ko_cols = [x for x in columns if 'KO' in x]
+
+        return mutations_cols, gene_ko_cols
 
     def _t_test(self, merged_df, mutation, gene_ko):
         return ttest_ind(*merged_df.groupby(mutation)[gene_ko].apply(lambda x:x.values))
@@ -58,13 +62,8 @@ class TTest:
 
 
     def main(self):
-        mutations_df = self._read_mutations_file()
-        mutations_cols = [x for x in mutations_df.cols if 'mut' in x]
-
-        gene_ko_df = self._read_gene_ko_file()
-        gene_ko_cols = [x for x in mutations_df.cols if 'KO' in x]
-
-        merged_df = _merge_mutations_gene_ko_dfs(mutations_df, gene_ko_df)
+        merged_df = _read_data(mutations_df, gene_ko_df)
+        mutations_cols, gene_ko_cols = self._assign_columns(merged_df.columns)
 
         row_list = []
         for mutation in mutations_cols:
