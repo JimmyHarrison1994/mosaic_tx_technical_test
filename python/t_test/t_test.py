@@ -6,6 +6,8 @@ import os
 
 from scipy.stats import ttest_ind
 
+results_dir = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "../../results/"))
+
 class TTest:
     
     def __init__(
@@ -50,7 +52,7 @@ class TTest:
         ax.set_ylabel('Mutation')
         ax.set_xlabel('Gene KO')
         fig.tight_layout()
-        fig.savefig('../results/t_statistic_heatmap.png')
+        fig.savefig(os.path.join(results_dir, 't_statistic_heatmap.png'))
 
     def plot_minus_log_p_heatmap(self, result_df):
         minus_log_p_df = result_df.pivot(index='mutation', columns = 'gene_ko', values='p_value').applymap(np.log10) * -1
@@ -59,7 +61,7 @@ class TTest:
         ax.set_ylabel('Mutation')
         ax.set_xlabel('Gene KO')
         fig.tight_layout()
-        fig.savefig('../results/p_value_heatmap.png')
+        fig.savefig(os.path.join(results_dir, 'p_value_heatmap.png'))
 
 
     def main(self):
@@ -72,7 +74,7 @@ class TTest:
                 row_list.append(self._populate_row(merged_df, mutation, gene_ko))
 
         result_df = pd.DataFrame(row_list)
-        result_df.to_csv(os.path.join('../results', self.out_path), sep='\t', index=False)
+        result_df.to_csv(os.path.join(results_dir, self.out_path), sep='\t', index=False)
 
         if self.plot:
             self.plot_t_statistic_heatmap(result_df)
