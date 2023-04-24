@@ -13,6 +13,12 @@ def generate_t_test_calculator():
     return TTest(os.path.join(data_dir, "Mutations.tsv"),
                 os.path.join(data_dir,"Gene_KOs.tsv"),
                 'output.tsv')
+
+def generate_t_test_calculator_plot():
+    return TTest(os.path.join(data_dir, "Mutations.tsv"),
+                os.path.join(data_dir,"Gene_KOs.tsv"),
+                'output.tsv',
+                plot=True)
     
 
 class TestIO(TestCase):
@@ -54,11 +60,12 @@ class TestTTest(TestCase):
         self.assertEqual(results_df.shape, (100, 4))
 
     def test_plot(self):
-        t_test_calculator = generate_t_test_calculator()
-        results_df = pd.read_csv(os.path.join(results_dir, 'output.tsv'), sep='\t')
+        for file in glob.glob(os.path.join(results_dir, '*')):
+            os.remove(file)
 
-        t_test_calculator.plot_t_statistic_heatmap(results_df)
-        t_test_calculator.plot_minus_log_p_heatmap(results_df)
+        t_test_calculator = generate_t_test_calculator_plot()
+
+        t_test_calculator.main()
 
         output_files = os.listdir(results_dir)
         output_files.sort()

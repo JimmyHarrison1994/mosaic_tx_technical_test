@@ -19,7 +19,7 @@ docker build -t t_test_image .
 Then to run the tool run the command 
 
 ```
-docker run -v $(pwd)/results:/results -it t_test_image python -m t_test --out-path t_test_output.tsv --plot
+docker run -v $(pwd)/results:/mosaic_tx/results -it t_test_image python -m t_test --out-path t_test_output.tsv --plot
 ```
 
 This will populate the `results` directory with an output tsv file, containing the t statistic and P-value for each variant, gene pair, and two heatmaps of the t statistics and P-values of each pairwise T-test
@@ -27,7 +27,7 @@ This will populate the `results` directory with an output tsv file, containing t
 A full description of available command line arguments can be given with the command
 
 ```
-docker run -v $(pwd)/results:/results -it t_test_image python -m t_test --help
+docker run -it t_test_image python -m t_test --help
 ```
 
 ## Interpretation
@@ -39,13 +39,14 @@ The only variant, gene pair with a nominally significant association is (P < 0.0
 Unit testing can be run by running the command
 
 ```
-### Install libraries locally ###
+# Launch an interactive shell script in the Docker image
+docker run -it t_test_image /bin/bash
 
-python3 -m venv .venv
-source .venv/bin/activate
-pip3 install -r requirements.txt
+# Navigate to the root directory
 
-#################################
+cd ..
+
+# Run the tests
 
 pytest
 ```
