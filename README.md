@@ -33,5 +33,13 @@ The only variant, gene pair with a nominally significant association is (P < 0.0
 Unit testing can be run by running the command
 
 ```
+### Install pytest if required ###
+
+python3 -m venv .venv
+source .venv/bin/activate
+pip install pytest
+
+###################################
+
 pytest
 ```
