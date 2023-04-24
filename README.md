@@ -39,14 +39,5 @@ The only variant, gene pair with a nominally significant association is (P < 0.0
 Unit testing can be run by running the command
 
 ```
-# Launch an interactive shell script in the Docker image
-docker run -it t_test_image /bin/bash
-
-# Navigate to the root directory
-
-cd ..
-
-# Run the tests
-
-pytest
+docker run -it t_test_image pytest ..
 ```
